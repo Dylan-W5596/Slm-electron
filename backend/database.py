@@ -34,12 +34,12 @@ class ChatSession(Base):
     order = Column(Integer, default=0)
     
     group = relationship("Group", back_populates="sessions")
-    messages = relationship("Message", back_populates="session", cascade="all, delete-orphan", passive_deletes=True)
+    messages = relationship("Message", back_populates="session", cascade="all, delete-orphan")
 
 class Message(Base):
     __tablename__ = "messages"
     id = Column(Integer, primary_key=True, index=True)
-    session_id = Column(Integer, ForeignKey("sessions.id"))
+    session_id = Column(Integer, ForeignKey("sessions.id", ondelete="CASCADE"))
     role = Column(String)  # user, assistant, system
     content = Column(Text)
     timestamp = Column(DateTime, default=datetime.utcnow)

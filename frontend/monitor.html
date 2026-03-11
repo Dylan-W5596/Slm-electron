@@ -61,11 +61,46 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #d4af37;
         }
+
+        #command-wrapper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #111;
+            padding: 10px;
+            border-top: 1px solid #b45309;
+            display: flex;
+            gap: 10px;
+        }
+
+        #command-input {
+            flex: 1;
+            background: #000;
+            border: 1px solid #333;
+            color: #d4af37;
+            padding: 8px 12px;
+            font-family: inherit;
+            outline: none;
+            border-radius: 4px;
+        }
+
+        #command-input:focus {
+            border-color: #d4af37;
+        }
+
+        body {
+            padding-bottom: 60px;
+            /* Space for input */
+        }
     </style>
 </head>
 
 <body>
     <div id="log-container"></div>
+    <div id="command-wrapper">
+        <input type="text" id="command-input" placeholder="Enter dev command (e.g. /notify hello)..." />
+    </div>
     <script>
         const { ipcRenderer } = require('electron');
         const container = document.getElementById('log-container');
@@ -86,6 +121,24 @@
 
             // 自動滾動到底部
             window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        const commandInput = document.getElementById('command-input');
+        commandInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = commandInput.value.trim();
+                if (cmd) {
+                    console.log('Sending dev-command:', cmd);
+                    ipcRenderer.send('dev-command', cmd);
+                    // 在日誌中顯示已發送指令
+                    const cmdLog = document.createElement('div');
+                    cmdLog.style.color = '#888';
+                    cmdLog.style.fontStyle = 'italic';
+                    cmdLog.textContent = `> ${cmd}`;
+                    container.appendChild(cmdLog);
+                    commandInput.value = '';
+                }
+            }
         });
     </script>
 </body>

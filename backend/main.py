@@ -7,6 +7,8 @@ import uvicorn
 import os
 import sys
 import io
+import base64
+import contextlib
 
 # 強制設定標準輸出為 UTF-8 以解決 Windows CP950/Big5 編碼問題
 if sys.platform == "win32":
@@ -42,6 +44,15 @@ class AccessLogFilter(logging.Filter):
 
 logging.getLogger("uvicorn.access").addFilter(AccessLogFilter())
 log = logging.getLogger("uvicorn")
+
+OMNI_SYSTEM_PROMPT = {
+    "role": "system",
+    "content": """你是一個強大的 AI 助手，請遵循以下規範以確保系統能正確處理內容：
+1. 當使用者要求撰寫網頁或組件 (HTML/CSS) 時，請務必將代碼包裹在 ```html ... ``` 中。請注意，系統現在主要提供「程式碼檢視」，不會主動進行網頁預覽渲染。
+2. 對於圖表或數據視覺化需求，請務必使用 Python 的 Matplotlib 庫，並將代碼包裹在 ```python ... ``` 中。系統將會嘗試讀取並呈現圖表，因此請確保代碼完整且包含繪圖與顯示邏輯。
+3. 其他任何語言的程式碼請標註正確的語言標籤，例如 ```javascript 或 ```python。
+"""
+}
 
 from contextlib import asynccontextmanager
 
@@ -97,7 +108,8 @@ def get_status():
     return {
         "status": "running",
         "model_loaded": model_engine.is_loaded(),
-        "device": "cuda" if model_engine.has_gpu else "cpu"
+        "device": "cuda" if model_engine.has_gpu else "cpu",
+        "current_model": model_engine.get_current_model_id()
     }
 
 # --- 群組 API ---
@@ -198,6 +210,19 @@ def update_session(session_id: int, session_data: CreateSession, db: Session = D
 def get_history(session_id: int, db: Session = Depends(get_db)):
     return db.query(Message).filter(Message.session_id == session_id).order_by(Message.timestamp.asc()).all()
 
+@app.get("/updatelog")
+def get_updatelog():
+    # 檔案路徑位於專案根目錄下的 reviewer 資料夾
+    log_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "reviewer", "updatelog.md")
+    try:
+        if not os.path.exists(log_path):
+            raise HTTPException(status_code=404, detail="Update log file not found")
+        with open(log_path, "r", encoding="utf-8") as f:
+            content = f.read()
+        return {"content": content}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/chat")
 def chat(message: CreateMessage, db: Session = Depends(get_db)):
     # 1. 儲存使用者訊息
@@ -208,16 +233,61 @@ def chat(message: CreateMessage, db: Session = Depends(get_db)):
     # 2. 生成回應
     # 取得上下文 (取最後 10 則訊息)
     history = db.query(Message).filter(Message.session_id == message.session_id).order_by(Message.timestamp.asc()).all()
-    context = [{"role": m.role, "content": m.content} for m in history]
+    context = [OMNI_SYSTEM_PROMPT] + [{"role": m.role, "content": m.content} for m in history]
     
     response_text = model_engine.generate(context)
     
-    # 3. 儲存助手訊息
+    # 3. 儲存AI訊息
     ai_msg = Message(session_id=message.session_id, role="assistant", content=response_text)
     db.add(ai_msg)
     db.commit()
     
     return {"role": "assistant", "content": response_text}
+
+@app.post("/run_python")
+def run_python(data: dict):
+    code = data.get("code")
+    if not code:
+        raise HTTPException(status_code=400, detail="No code provided")
+    
+    # 修改代碼以配合後端執行與截圖
+    # 我們強制使用 Agg backend 並將 plt.show() 轉換為 base64 輸出
+    # 同時設定中文字體支援
+    wrapper_code = f"""
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import io
+import base64
+
+# 設定中文字體支援 (微軟正黑體或黑體)
+plt.rcParams['font.sans-serif'] = ['Microsoft YaHei', 'SimHei', 'Arial Unicode MS', 'sans-serif']
+plt.rcParams['axes.unicode_minus'] = False # 解決負號顯示問題
+
+{code}
+
+if plt.get_fignums():
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    img_str = base64.b64encode(buf.read()).decode('utf-8')
+    print(f"OMNI_CHART_START{{img_str}}OMNI_CHART_END")
+    plt.close('all')
+"""
+    
+    output = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(output):
+            exec(wrapper_code, {"__name__": "__main__"})
+        
+        full_output = output.getvalue()
+        import re
+        match = re.search(r"OMNI_CHART_START(.*?)OMNI_CHART_END", full_output, re.DOTALL)
+        
+        chart_data = match.group(1) if match else None
+        return {"status": "success", "chart": chart_data, "logs": full_output.split("OMNI_CHART_START")[0]}
+    except Exception as e:
+        return {"status": "error", "message": str(e), "logs": output.getvalue()}
 
 @app.post("/switch_model")
 def switch_model(data: dict):

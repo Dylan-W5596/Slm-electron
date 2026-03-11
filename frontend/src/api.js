@@ -100,5 +100,27 @@ export const api = {
         });
         if (!res.ok) throw new Error('切換模型失敗');
         return res.json();
+    },
+
+    async getStatus() {
+        const res = await fetch(`${BACKEND_URL}/status`);
+        if (!res.ok) throw new Error('無法取得系統狀態');
+        return res.json();
+    },
+
+    async runPython(code) {
+        const res = await fetch(`${BACKEND_URL}/run_python`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code })
+        });
+        if (!res.ok) throw new Error('執行 Python 代碼失敗');
+        return res.json();
+    },
+
+    async getUpdateLog() {
+        const res = await fetch(`${BACKEND_URL}/updatelog`);
+        if (!res.ok) throw new Error('無法取得更新日誌');
+        return res.json();
     }
 };

@@ -1,4 +1,6 @@
 :root {
+    --home-bg-color: #020918;
+    --title-start-color: #ffffff;
     --bg-color: #0f172a;
     --bg-part-color: #1f2531;
     --sidebar-bg: #1e293b;
@@ -13,25 +15,31 @@
     --border-color: #334155;
     --font-family: 'Inter', system-ui, -apple-system, sans-serif;
     --shadow-color: rgba(0, 0, 0, 0.2);
+    --img-filter: invert(1);
 }
 
 [data-theme="light"] {
+    --home-bg-color: #f1f5f9;
+    --title-start-color: #1e293b;
     --bg-color: #f8fafc;
-    --bg-part-color: #cccccc;
+    --bg-part-color: #f1f5f9;
     --sidebar-bg: #ffffff;
     --chat-bg: #f8fafc;
     --primary-color: #2563eb;
     --primary-hover: #1d4ed8;
-    --text-primary: #1e293b;
+    --text-primary: #0f172a;
     --text-secondary: #64748b;
     --user-msg-bg: #2563eb;
-    --ai-msg-bg: #e2e8f0;
+    --ai-msg-bg: #f1f5f9;
     --input-bg: #ffffff;
-    --border-color: #cbd5e1;
+    --border-color: #e2e8f0;
     --shadow-color: rgba(0, 0, 0, 0.05);
+    --img-filter: invert(0);
 }
 
 [data-theme="cyber"] {
+    --home-bg-color: #131314;
+    --title-start-color: #ffffff;
     --bg-color: #050505;
     --bg-part-color: #1b3018;
     --sidebar-bg: #0a0a0a;
@@ -45,4 +53,5 @@
     --input-bg: #0a0a0a;
     --border-color: #00ff41;
     --shadow-color: rgba(0, 255, 65, 0.1);
+    --img-filter: invert(1);
 }

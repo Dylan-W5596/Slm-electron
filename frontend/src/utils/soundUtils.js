@@ -1,9 +1,11 @@
+import { SOUNDS } from '../assets/assets';
+
 // 預定義音效路徑
 const SOUND_PATHS = {
-    click: '/src/assets/sounds/C9002_button_click.wav',
-    click_Mouse: '/src/assets/sounds/C9001_Mouse_Click.wav',
-    success: '/src/assets/sounds/N37001_powerupsuccess.wav',
-    error: '/src/assets/sounds/N89001_rush__blip9.wav',
+    click: SOUNDS.mouseClick,
+    click_Mouse: SOUNDS.buttonClick,
+    success: SOUNDS.success,
+    error: SOUNDS.blip,
 };
 
 // 快取 Audio 物件

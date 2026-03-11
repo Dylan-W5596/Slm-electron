@@ -4,7 +4,14 @@
 - 優化frontend程式碼檔案(分更細) "ok"
 - 修復"刪除,重新命名"的bug "ok"
 2026/01/23 todo:
-- 修復聊天室命名問題
-- 設定畫面
-- 添加圖示, 音訊
-2026/01/28 todo:
+- 修復聊天室命名問題 "ok"
+- 設定畫面 "ok"
+- 添加圖示, 音訊 "ok"
+2026/02/21 todo:
+- 修改OmniWindow第76行 "ok"
+- 整理所有圖片與圖片程式碼  "ok"
+- 調整Home Fab按鈕 "temporary not"
+- 修復Settings Generate Core設定 "ok"
+2026/02/28 todo:
+- 生成圖表要可放大
+- 修正update log資料路徑

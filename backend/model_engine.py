@@ -37,9 +37,9 @@ if sys.platform == "win32":
 
 models_path = {
     "Gemma3_4b_it_Q4_K_M": os.path.join(MODELS_DIR, "Gemma3_4b_it_Q4_K_M.gguf"),
-    "Llama_3.2_1B_It_Q8_0": os.path.join(MODELS_DIR, "Llama_3.2_1B_It_Q8_0.gguf")
+    "Llama_3.2_3B_It_Q4_K_M": os.path.join(MODELS_DIR, "Llama_3.2_3B_It_Q4_K_M.gguf")
 }
-DEFULT_MODEL_PATH = models_path["Llama_3.2_1B_It_Q8_0"]
+DEFULT_MODEL_PATH = models_path["Llama_3.2_3B_It_Q4_K_M"]
 
 class ModelEngine:
     def __init__(self):
@@ -89,6 +89,12 @@ class ModelEngine:
 
     def is_loaded(self):
         return self.llm is not None
+
+    def get_current_model_id(self):
+        for model_id, path in models_path.items():
+            if path == self.current_use_model_path:
+                return model_id
+        return None
 
     def generate(self, messages: List[Dict[str, str]]) -> str:
         """

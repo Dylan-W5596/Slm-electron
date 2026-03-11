@@ -12,12 +12,13 @@ const BACKEND_URL = `http://127.0.0.1:${BACKEND_PORT}`;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
-        width: 1200,
-        height: 800,
+        width: 1500,
+        height: 1000,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false, // 若需要簡單的 IPC 或是使用 preload
-            webSecurity: false // 若有嚴格需求允許載入本地資源，通常不建議在 localhost 使用
+            webSecurity: false, // 若有嚴格需求允許載入本地資源，通常不建議在 localhost 使用
+            webviewTag: true
         },
         // 高級質感: 可以保留預設邊框或自訂。為了穩定性我們先保留預設。
         backgroundColor: '#121212',
@@ -144,6 +145,16 @@ ipcMain.on('open-monitor', () => {
     monitorWindow.on('closed', () => {
         monitorWindow = null;
     });
+});
+
+// 開發者指令轉發: Monitor -> Main Process -> Main Window
+ipcMain.on('dev-command', (event, cmd) => {
+    console.log('[Main] Received dev-command:', cmd);
+    if (mainWindow) {
+        mainWindow.webContents.send('execute-dev-command', cmd);
+    } else {
+        console.warn('[Main] Cannot forward dev-command: mainWindow is null');
+    }
 });
 
 app.on('ready', () => {

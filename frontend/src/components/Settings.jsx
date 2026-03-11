@@ -1,4 +1,4 @@
-import progressIcon from '../assets/icons/I351009progress_activity_24dp.png';
+import { ICONS } from '../assets/assets';
 import '../styles/Settings.css';
 
 function Settings({ config, onUpdateConfig, onBack, onPlayClick, onOpenMonitor, selectedModel, isModelLoading, onModelChange, t }) {
@@ -106,7 +106,7 @@ function Settings({ config, onUpdateConfig, onBack, onPlayClick, onOpenMonitor, 
                             {isModelLoading && selectedModel === "Gemma3_4b_it_Q4_K_M" && (
                                 <div className="NotificationDiv">
                                     <span className='Notification'>Model is loading...</span>
-                                    <img src={progressIcon} alt="loading" className="model-loader" />
+                                    <img src={ICONS.progress} alt="loading" className="model-loader" />
                                 </div>
                             )}
                         </div>
@@ -115,15 +115,15 @@ function Settings({ config, onUpdateConfig, onBack, onPlayClick, onOpenMonitor, 
                             <input
                                 type="radio"
                                 name='modelChange'
-                                checked={selectedModel === 'Llama_3.2_1B_It_Q8_0'}
-                                onChange={() => onModelChange("Llama_3.2_1B_It_Q8_0")}
+                                checked={selectedModel === 'Llama_3.2_3B_It_Q4_K_M'}
+                                onChange={() => onModelChange("Llama_3.2_3B_It_Q4_K_M")}
                                 disabled={isModelLoading}
                             />
-                            <span>Llama3.2_1B_It_Q8_0</span>
-                            {isModelLoading && selectedModel === "Llama_3.2_1B_It_Q8_0" && (
+                            <span>Llama_3.2_3B_It_Q4_K_M</span>
+                            {isModelLoading && selectedModel === "Llama_3.2_3B_It_Q4_K_M" && (
                                 <div className="NotificationDiv">
                                     <span className='Notification'>Model is loading...</span>
-                                    <img src={progressIcon} alt="loading" className="model-loader" />
+                                    <img src={ICONS.progress} alt="loading" className="model-loader" />
                                 </div>
                             )}
                         </div>
@@ -149,6 +149,26 @@ function Settings({ config, onUpdateConfig, onBack, onPlayClick, onOpenMonitor, 
                             value={config.maxTokens}
                             onChange={(e) => onUpdateConfig({ ...config, maxTokens: parseInt(e.target.value) })}
                         />
+                    </div>
+                    <div className="setting-item">
+                        <label>Generate Core</label>
+                        <div className="GenerateCore">
+                            <div style={{ display: 'flex', gap: '5px' }}>
+                                <input  // xx
+                                    type="radio"
+                                    name='deviceChange'
+                                />
+                                <span>CPU</span>
+                            </div>
+                            <span> |</span>
+                            <div style={{ display: 'flex', gap: '5px' }}>
+                                <input  // xx
+                                    type="radio"
+                                    name='deviceChange'
+                                />
+                                <span>GPU Cuda</span>
+                            </div>
+                        </div>
                     </div>
                     <div className="setting-item no-border">
                         <button className="reset-prev-btn" onClick={handleResetDefaults}>

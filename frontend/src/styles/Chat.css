@@ -97,10 +97,11 @@
 }
 
 .avatar-img {
-    width: 100%;
-    height: 100%;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     object-fit: cover;
+    filter: brightness(0) var(--img-filter);
 }
 
 .message-body {
@@ -151,7 +152,7 @@
 .action-btn img {
     width: 18px;
     height: 18px;
-    filter: brightness(0) invert(1);
+    filter: brightness(0) var(--img-filter);
 }
 
 .message-content h1,

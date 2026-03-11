@@ -40,7 +40,22 @@ export const languages = {
         creditsTech: "本專案基於 Electron 與 React 打造，後端由 FastAPI 驅動，並透過 CUDA 加速模型推論。",
         creditsModel: "此應用使用了 Meta Llama 團隊提供的 Llama 3.2 與 Google DeepMind 團隊提供的 Gemma 3輕量模型，讓本地端 AI 成為可能。",
         creditsArt: "背景動畫採用了現代 Shader 技術，加上 ReactBit.dev 上的資源。",
-        creditsSpecial: "感謝所有參與測試與提供建議的夥伴。大家的反饋讓 X-SLM 持續進化。"
+        creditsSpecial: "感謝所有參與測試與提供建議的夥伴。大家的反饋讓 X-SLM 持續進化。",
+        artificial: "系統生成資料",
+        updateLog: "更新日誌",
+        updateLogTitle: "版本更新歷史",
+        back: "返回",
+        account: "帳戶",
+        chartOutput: "生成圖表",
+        newWebBrowser: "建立新的瀏覽器",
+        browser: "瀏覽器",
+        webPreview: "網頁預覽",
+        code: "生成程式碼",
+        run: "執行",
+        runDescription: "執行當前程式碼",
+        omniWindowNone: "當前沒有生成資料，使用AI來生成資料或開啟瀏覽器吧！",
+        aiCompleteNotice: "AI 訊息輸出完成",
+        error: "錯誤"
     },
     en: {
         settings: "System Settings",
@@ -83,6 +98,21 @@ export const languages = {
         creditsTech: "Built with Electron and React, powered by FastAPI backend with CUDA acceleration.",
         creditsModel: "This application uses Meta Llama team for the Llama 3.2 and Google DeepMind team for the Gemma 3 lightweight models.",
         creditsArt: "Background animations utilize modern Shader techniques, and devloped source from ReactBit.dev.",
-        creditsSpecial: "Special thanks to all testers and contributors. Everyone's feedback drives X-SLM forward."
+        creditsSpecial: "Special thanks to all testers and contributors. Everyone's feedback drives X-SLM forward.",
+        artificial: "AI Generate Artificial",
+        updateLog: "Update Log",
+        updateLogTitle: "Version History",
+        back: "Back",
+        account: "Account",
+        chartOutput: "Chart Output",
+        newWebBrowser: "New Web Browser",
+        browser: "Browser",
+        webPreview: "Web Preview",
+        code: "Code",
+        run: "Run",
+        runDescription: "Run the current code.",
+        omniWindowNone: "No active tabs. AI output or Web browser will appear here.",
+        aiCompleteNotice: "AI Message output complete",
+        error: "Error"
     }
 };

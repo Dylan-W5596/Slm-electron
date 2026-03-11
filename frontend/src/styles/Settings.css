@@ -182,6 +182,23 @@
     background: var(--bg-part-color);
 }
 
+.setting-item .GenerateCore {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 8px 0;
+    background: var(--bg-part-color);
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.setting-item .GenerateCore:hover {
+    border-color: var(--border-color);
+    background: var(--bg-part-color);
+}
+
 .setting-item .Notification {
     min-width: 24px;
     height: 24px;
@@ -222,7 +239,7 @@
     animation: spin 1s steps(8) infinite;
     /* 刻度感 */
     display: inline-block;
-    filter: brightness(0) invert(1);
+    filter: brightness(0) var(--img-filter);
 }
 
 @keyframes spin {
@@ -265,8 +282,7 @@
     color: #cbd5e1;
 }
 
-.setting-item input[type="checkbox"],
-input[type="radio"] {
+.setting-item input[type="radio"] {
     accent-color: var(--primary-color);
     cursor: pointer;
     transition: 0.3s;

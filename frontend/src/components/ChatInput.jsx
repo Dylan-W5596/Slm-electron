@@ -1,5 +1,4 @@
-import sendIcon from '../assets/icons/I351005_send_24dp.png';
-import stopIcon from '../assets/icons/I351007_stop_24dp.png';
+import { ICONS } from '../assets/assets';
 import '../styles/ChatInput.css';
 
 function ChatInput({ input, setInput, replyingTo, onCancelReply, onSendMessage, onStopGeneration, isLoading, t }) {
@@ -50,11 +49,11 @@ function ChatInput({ input, setInput, replyingTo, onCancelReply, onSendMessage, 
                     <div className="input-actions">
                         {isLoading ? (
                             <button className="stop-btn" onClick={onStopGeneration} title="停止生成">
-                                <img src={stopIcon} alt="Stop" className="white-icon" />
+                                <img src={ICONS.stop} alt="Stop" className="white-icon" />
                             </button>
                         ) : (
                             <button className="send-btn" onClick={handleSend} disabled={!input.trim()}>
-                                <img src={sendIcon} alt="Send" className="white-icon" />
+                                <img src={ICONS.send} alt="Send" className="white-icon" />
                             </button>
                         )}
                     </div>
