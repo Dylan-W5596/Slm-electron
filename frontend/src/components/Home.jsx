@@ -170,7 +170,7 @@ function Home({ onNavigate, t }) {
             )}
 
             <div className="footer-info">
-                <span>ALPHA Version 1.0.0</span>
+                <span>{t.version}</span>
                 <span className="divider">|</span>
                 <span>CUDA ACCELERATED</span>
                 <span className="divider">|</span>

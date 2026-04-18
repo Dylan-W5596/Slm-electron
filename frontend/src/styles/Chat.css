@@ -212,6 +212,24 @@
     display: block;
 }
 
+.message-content pre::-webkit-scrollbar {
+    width: 5px;
+    height: 6px;
+}
+
+.message-content pre::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.message-content pre::-webkit-scrollbar-thumb {
+    background: rgba(78, 71, 71, 0.479);
+    border-radius: 10px;
+}
+
+.message-content pre::-webkit-scrollbar-thumb:hover {
+    background: rgba(158, 154, 154, 0.479);
+}
+
 .message-content blockquote {
     border-left: 3px solid var(--primary-color);
     margin: 1rem 0;

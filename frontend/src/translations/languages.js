@@ -1,3 +1,5 @@
+import { version } from "react";
+
 export const languages = {
     zh: {
         settings: "系統設定",
@@ -37,13 +39,15 @@ export const languages = {
         specialThanks: "特別鳴謝",
         credits: "開發鳴謝",
         creditsTitle: "技術鳴謝與致敬",
-        creditsTech: "本專案基於 Electron 與 React 打造，後端由 FastAPI 驅動，並透過 CUDA 加速模型推論。",
-        creditsModel: "此應用使用了 Meta Llama 團隊提供的 Llama 3.2 與 Google DeepMind 團隊提供的 Gemma 3輕量模型，讓本地端 AI 成為可能。",
+        creditsTech: "本專案基於 Electron 與 React 打造，後端跨接 FastAPI 與 Ollama 引擎，實現本地端高效能推論。",
+        creditsModel: "此應用使用了 Meta Llama 團隊提供的 Llama 3.2 與 Google DeepMind 團隊提供的 Gemma 4 模型，讓本地端 AI 成為可能。",
         creditsArt: "背景動畫採用了現代 Shader 技術，加上 ReactBit.dev 上的資源。",
         creditsSpecial: "感謝所有參與測試與提供建議的夥伴。大家的反饋讓 X-SLM 持續進化。",
-        artificial: "系統生成資料",
+        Visualizer: "系統視覺資料",
         updateLog: "更新日誌",
         updateLogTitle: "版本更新歷史",
+        investment: "投資研究",
+        investmentTitle: "台股智庫",
         back: "返回",
         account: "帳戶",
         chartOutput: "生成圖表",
@@ -55,7 +59,11 @@ export const languages = {
         runDescription: "執行當前程式碼",
         omniWindowNone: "當前沒有生成資料，使用AI來生成資料或開啟瀏覽器吧！",
         aiCompleteNotice: "AI 訊息輸出完成",
-        error: "錯誤"
+        success: "成功",
+        error: "錯誤",
+        reply: "回復",
+        copy: "複製",
+        version: "Alpha 2.1.0"
     },
     en: {
         settings: "System Settings",
@@ -95,13 +103,15 @@ export const languages = {
         specialThanks: "Special Thanks",
         credits: "Credits",
         creditsTitle: "Technical Acknowledgments",
-        creditsTech: "Built with Electron and React, powered by FastAPI backend with CUDA acceleration.",
-        creditsModel: "This application uses Meta Llama team for the Llama 3.2 and Google DeepMind team for the Gemma 3 lightweight models.",
+        creditsTech: "Built with Electron and React, powered by FastAPI and Ollama engine for high-performance local inference.",
+        creditsModel: "This application uses Meta Llama team for the Llama 3.2 and Google DeepMind team for the Gemma 4 models.",
         creditsArt: "Background animations utilize modern Shader techniques, and devloped source from ReactBit.dev.",
         creditsSpecial: "Special thanks to all testers and contributors. Everyone's feedback drives X-SLM forward.",
         artificial: "AI Generate Artificial",
         updateLog: "Update Log",
         updateLogTitle: "Version History",
+        investment: "Investment",
+        investmentTitle: "Investment Core",
         back: "Back",
         account: "Account",
         chartOutput: "Chart Output",
@@ -113,6 +123,10 @@ export const languages = {
         runDescription: "Run the current code.",
         omniWindowNone: "No active tabs. AI output or Web browser will appear here.",
         aiCompleteNotice: "AI Message output complete",
-        error: "Error"
+        success: "Success",
+        error: "Error",
+        reply: "Reply",
+        copy: "Copy",
+        version: "Alpha 2.1.0"
     }
 };

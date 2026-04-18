@@ -16,9 +16,13 @@ import renameIcon from './icons/I351014_drawer_alt.png';
 import deleteIcon from './icons/I351015_trash_xmark.png';
 import updateIcon from './icons/I351016_update.png';
 import coffeeIcon from './icons/I351017_mug_hot.png';
+import investIcon from './icons/I351018_invest.png';
+import chartIcon from './icons/I351019_chart_pie.png';
+import omniSysIcon from './icons/I351020_objects_column.png'
 import accountIcon from './icons/IM742001_account_circle.png';
 import copyAllIcon from './icons/IM742002_copy_all.png';
 import replyIcon from './icons/IM742003_reply.png';
+
 
 // Sounds
 import clickBubbleSound from './sounds/C1001_button_click_bubble.wav';
@@ -29,6 +33,7 @@ import notificationSound from './sounds/N55001_notification_sound.wav';
 import rushBlipSound from './sounds/N89001_rush__blip9.wav';
 
 export const ICONS = {
+    //I351
     createFolder: createFolderIcon,
     folderDelete: folderDeleteIcon,
     folder: folderIcon,
@@ -47,8 +52,12 @@ export const ICONS = {
     delete: deleteIcon,
     update: updateIcon,
     coffee: coffeeIcon,
+    invest: investIcon,
+    chartPie: chartIcon,
+    omniSys: omniSysIcon,
+    // IM742
     copyAll: copyAllIcon,
-    reply: replyIcon
+    reply: replyIcon,
 };
 
 export const SOUNDS = {

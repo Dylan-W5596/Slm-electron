@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, memo } from 'react';
 import { ICONS } from '../assets/assets';
 import '../styles/NavBar.css';
 
@@ -17,6 +17,8 @@ function NavBar({
     onDeleteGroup,
     onMoveSession,
     onOpenSettings,
+    onOpenInvestment,
+    onOpenNewsMap,
     onGoHome,
     activeView,
     onPlayClick,
@@ -47,7 +49,7 @@ function NavBar({
     const resize = (e) => {
         if (isResizing) {
             const newWidth = e.clientX;
-            if (newWidth >= 300 && newWidth <= 500) { // Sidebar最大與最小值
+            if (newWidth >= 300 && newWidth <= 500) {
                 setSidebarWidth(newWidth);
             }
         }
@@ -66,7 +68,7 @@ function NavBar({
             window.removeEventListener('mousemove', resize);
             window.removeEventListener('mouseup', stopResizing);
         };
-    }, [isResizing]);
+    }, [isResizing, resize, stopResizing, sidebarWidth]);
 
     const toggleGroup = (groupId) => {
         onPlayClick();
@@ -139,10 +141,10 @@ function NavBar({
                     <span className="history-title">{s.title}</span>
                     <div className="history-actions">
                         <button title={t.rename} onClick={(e) => { onPlayClick(); handleStartRename(e, `session-${s.id}`, s.title); }}>
-                            <img src={ICONS.rename} />
+                            <img src={ICONS.rename} alt="" />
                         </button>
                         <button title={t.delete} onClick={(e) => { e.stopPropagation(); onPlayClick(); onDeleteSession(s.id); }}>
-                            <img src={ICONS.delete} />
+                            <img src={ICONS.delete} alt="" />
                         </button>
                     </div>
                 </>
@@ -153,26 +155,18 @@ function NavBar({
     return (
         <div
             className={`navbar-container ${isResizing ? 'resizing' : ''}`}
-            style={{ width: sidebarOpen ? `${sidebarWidth}px` : '68px' }}
+            style={{ width: sidebarOpen && activeView === 'chat' ? `${sidebarWidth}px` : '68px' }}
         >
-            {/* 1st Layer: Global Navigation Bar */}
             <div className="global-nav">
                 <div className="nav-top-actions">
-                    <button
-                        className={`nav-btn ${activeView === 'home' ? 'active' : ''}`}
-                        onClick={onGoHome}
-                        title={t.goHome}
-                    >
+                    <button className={`nav-btn ${activeView === 'home' ? 'active' : ''}`} onClick={onGoHome} title={t.goHome}>
                         <img src={ICONS.home} alt="Home" className="nav-icon" />
                     </button>
                     <button
                         className={`nav-btn ${activeView === 'chat' ? 'active' : ''}`}
                         onClick={() => {
-                            if (activeView === 'chat') {
-                                // If already in chat, toggle sidebar
-                                onToggleSidebar();
-                            } else {
-                                // If not in chat, switch to chat and ensure sidebar is open
+                            if (activeView === 'chat') onToggleSidebar();
+                            else {
                                 handleNavigate('chat');
                                 if (!sidebarOpen) onToggleSidebar();
                                 if (sessionId) onLoadSession(sessionId);
@@ -182,22 +176,19 @@ function NavBar({
                     >
                         <img src={ICONS.account} alt="Chat" className="nav-icon" />
                     </button>
-                    <button
-                        className={`nav-btn ${activeView === 'settings' ? 'active' : ''}`}
-                        onClick={onOpenSettings}
-                        title={t.settings}
-                    >
+                    <button className={`nav-btn ${activeView === 'investment' ? 'active' : ''}`} onClick={onOpenInvestment} title={t.investment}>
+                        <img src={ICONS.invest} alt="Investment" className="nav-icon" />
+                    </button>
+                    <button className={`nav-btn ${activeView === 'newsmap' ? 'active' : ''}`} onClick={onOpenNewsMap} title={t.news}>
+                        <img src={ICONS.global} alt="News Map" className="nav-icon" />
+                    </button>
+                    <button className={`nav-btn ${activeView === 'settings' ? 'active' : ''}`} onClick={onOpenSettings} title={t.settings}>
                         <img src={ICONS.settings} alt="Settings" className="nav-icon" />
                     </button>
                 </div>
                 <div className="nav-footer">
-                    <button
-                        className={`nav-btn`}
-                        style={{ marginBottom: '1rem' }}
-                        onClick={() => { onPlayClick(); onToggleOmni(); }}
-                        title={t.artificial}
-                    >
-                        <span style={{ fontSize: '1.4rem', filter: 'grayscale(1)' }}>✨</span>
+                    <button className={`nav-btn`} style={{ marginBottom: '1rem' }} onClick={() => { onPlayClick(); onToggleOmni(); }} title={t.Visualizer}>
+                        <span><img src={ICONS.omniSys} alt="Omni System" className="nav-icon" /></span>
                     </button>
                     <div className="account-trigger" title={t.account}>
                         <img src={ICONS.account} alt={t.account} className="avatar-img" />
@@ -205,8 +196,7 @@ function NavBar({
                 </div>
             </div>
 
-            {/* 2nd Layer: Resizable Sidebar Content */}
-            {sidebarOpen && (
+            {sidebarOpen && activeView === 'chat' && (
                 <div className="sidebar-content">
                     <div className="sidebar-header">
                         <button className="new-chat-btn" onClick={() => { onPlayClick(); onNewChat(); }}>
@@ -220,12 +210,7 @@ function NavBar({
                     <div className="history-list">
                         {groups.map(g => (
                             <div key={g.id} className="group-container">
-                                <div
-                                    className="group-header"
-                                    onClick={() => toggleGroup(g.id)}
-                                    onDragOver={(e) => onDragOver(e, `group-${g.id}`)}
-                                    onDrop={(e) => onDrop(e, g.id)}
-                                >
+                                <div className="group-header" onClick={() => toggleGroup(g.id)} onDragOver={(e) => onDragOver(e, `group-${g.id}`)} onDrop={(e) => onDrop(e, g.id)}>
                                     <span className={`arrow ${collapsedGroups[g.id] ? '' : 'down'}`}>▶</span>
                                     {editingId === `group-${g.id}` ? (
                                         <input
@@ -242,10 +227,10 @@ function NavBar({
                                     )}
                                     <div className="group-actions">
                                         <button title={t.rename} onClick={(e) => { onPlayClick(); handleStartRename(e, `group-${g.id}`, g.name); }}>
-                                            <img src={ICONS.rename} />
+                                            <img src={ICONS.rename} alt="" />
                                         </button>
                                         <button title={t.delete} onClick={(e) => { e.stopPropagation(); onPlayClick(); onDeleteGroup(g.id); }}>
-                                            <img src={ICONS.delete} />
+                                            <img src={ICONS.delete} alt="" />
                                         </button>
                                     </div>
                                 </div>
@@ -266,16 +251,11 @@ function NavBar({
                             </div>
                         </div>
                     </div>
-
-                    {/* Resize Handle */}
-                    <div
-                        className={`resize-handle ${isResizing ? 'active' : ''}`}
-                        onMouseDown={startResizing}
-                    />
+                    <div className={`resize-handle ${isResizing ? 'active' : ''}`} onMouseDown={startResizing} />
                 </div>
             )}
         </div>
     );
 }
 
-export default NavBar;
+export default memo(NavBar);

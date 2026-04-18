@@ -1,17 +1,75 @@
-1. 專屬於軟體的後台運作的output輸出畫面(包含:所有問與答, 錯誤輸出, 運作輸出)
 
-2026/01/22 todo:
-- 優化frontend程式碼檔案(分更細) "ok"
-- 修復"刪除,重新命名"的bug "ok"
-2026/01/23 todo:
-- 修復聊天室命名問題 "ok"
-- 設定畫面 "ok"
-- 添加圖示, 音訊 "ok"
-2026/02/21 todo:
-- 修改OmniWindow第76行 "ok"
-- 整理所有圖片與圖片程式碼  "ok"
-- 調整Home Fab按鈕 "temporary not"
-- 修復Settings Generate Core設定 "ok"
-2026/02/28 todo:
-- 生成圖表要可放大
-- 修正update log資料路徑
+* Update todo
+	1. 專屬於軟體的後台運作的output輸出畫面(包含:所有問與答, 錯誤輸出, 運作輸出)
+
+	2026/01/22 todo:
+		- 優化frontend程式碼檔案(分更細) "ok"
+		- 修復"刪除,重新命名"的bug "ok"
+	2026/01/23 todo:
+		- 修復聊天室命名問題 "ok"
+		- 設定畫面 "ok"
+		- 添加圖示, 音訊 "ok"
+	2026/02/21 todo:
+		- 修改OmniWindow第76行 "ok"
+		- 整理所有圖片與圖片程式碼  "ok"
+		- 調整Home Fab按鈕 "temporary not"
+		- 修復Settings Generate Core設定 "ok"
+	2026/02/28 todo:
+		- 生成圖表要可放大 "move to 4/3"
+		- 修正update log資料路徑 "ok"
+	2026/03/14 todo:
+		- 設計新聞地圖, RSS & feedparser
+		- 投資研究中心內增加公司基本資訊與簡介 "ok"
+		- 投資研究中心內增加歷史市場行情(3年內到昨日, 不抓取當天數值) "ok"
+		- 在系統生成資料內的圖形從matplotlib改成rechart "move to 4/3"
+	2026/04/03 todo:
+		- 修正 @OmniWindow.jsx 錯誤 "ok"
+	2026/04/08 CHANGE & todo:
+		== 改用PowerShell ==
+		- RSS & feedparser
+		- 新增多個模型切換, 進入軟體前須知下載ollama(guide)
+		- 修正模型不會使用gobal.py之問題
+		- Build Generate core setting
+
+
+	"Huge" SYSYEM SETTING, STRUCTURE, UI agenda:
+	- Change the base of AI Generate system to "Transfromer.js + WebGPU" "ok"
+	=> change to ollama
+	- Security expand(preload.js, contextIsolation false...)
+	
+* Note
+	1.	將 RSS Feedparser 結合 世界新聞地圖，可以讓你的專案從「單純的閱讀器」升級為「具備視覺化洞察的專業地圖」。
+	以下是你可以嘗試的幾個創意實作方向：
+	
+	- 地區自動分類 (Region-specific Feeds)
+	你可以蒐集不同國家或地區的專屬 RSS 連結。當使用者在 Electron 地圖上點擊某個國家（例如：日本）時，後端就去抓取對應國家的 RSS Feed。
+	做法：建立一個 feeds_config.json，對應不同國家的 RSS URL。
+	效益：讓地圖真正具備「空間資訊」與「內容」的連結。
+	
+	- 關鍵字地理定位 (Geocoding News)
+	既然地圖已經有了，你可以嘗試從新聞標題中「提取地點」。
+	做法：用 Python 篩選標題中的關鍵字（如「紐約」、「巴黎」），並在地圖對應位置標記一個動態圓點或圖標。
+	效益：使用者一眼就能看到「現在世界上哪裡正發生大事」。
+	
+	- 情緒分析與地圖變色 (Sentiment Map)
+	這是一個非常酷的進階功能。利用 LLM（如 Llama 或 Gemini）對新聞標題進行情緒分析（正面/中立/負面）。
+	做法：1. 抓取新聞標題。2. 傳給 AI 模型判斷情緒分數。3. 根據平均分，將該國家在地圖上顯示為綠色（正面）、灰色（中立）或紅色（負面/緊張）。
+	效益：視覺化全球即時局勢，讓你的地圖擁有「直覺性」。
+	
+	- 即時新聞瀑布流 (Live Ticker)
+	在 Electron 的地圖側邊欄或底部，加入一個「滾動式新聞牆」。
+
+	做法：前端定時向後端請求最新的 RSS 資料。
+	效益：模擬專業新聞中心（如 Bloomberg 或 Reuters terminal）的臨場感。
+	
+	- 多語言自動翻譯
+	當你抓取法國或中東國家的 RSS 時，內容可能是法文或阿拉伯文。
+
+	做法：後端抓到資料後，先過一層翻譯 API（或你的本地 LLM 模型），再傳給前端。
+	效益：打破資訊繭房，讓使用者點擊地圖時能閱讀全世界的第一手資訊。
+	
+	
+	2. 
+	
+	
+		

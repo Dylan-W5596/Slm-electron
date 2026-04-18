@@ -25,9 +25,11 @@ textarea {
 
 .app-container {
     display: flex;
-    width: 100%;
-    overflow: hidden;
+    width: 100vw;
     height: 100vh;
+    overflow: hidden;
+    box-sizing: border-box;
+    background-color: var(--chat-bg);
     animation: fadeInApp 0.5s ease-out;
 }
 
@@ -66,6 +68,7 @@ textarea {
     display: flex;
     overflow: hidden;
     position: relative;
+    min-width: 0;
 }
 
 .main-chat {
@@ -74,6 +77,8 @@ textarea {
     flex-direction: column;
     background-color: var(--chat-bg);
     position: relative;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .empty-state {

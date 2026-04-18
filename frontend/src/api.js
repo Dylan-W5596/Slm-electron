@@ -122,5 +122,46 @@ export const api = {
         const res = await fetch(`${BACKEND_URL}/updatelog`);
         if (!res.ok) throw new Error('無法取得更新日誌');
         return res.json();
+    },
+
+    // --- Investment APIs ---
+    async getNetworkStatus() {
+        const res = await fetch(`${BACKEND_URL}/investment/network_status`);
+        if (!res.ok) throw new Error('無法取得聯網狀態');
+        return res.json();
+    },
+
+    async toggleNetwork(allowed) {
+        const res = await fetch(`${BACKEND_URL}/investment/toggle_network`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ allowed })
+        });
+        if (!res.ok) throw new Error('切換聯網權限失敗');
+        return res.json();
+    },
+
+    async getStockData(symbol) {
+        const res = await fetch(`${BACKEND_URL}/investment/stock/${symbol}`);
+        if (!res.ok) throw new Error('無法取得股票數據');
+        return res.json();
+    },
+
+    async getFundamentals(symbol) {
+        const res = await fetch(`${BACKEND_URL}/investment/fundamentals/${symbol}`);
+        if (!res.ok) throw new Error('無法取得基本面數據');
+        return res.json();
+    },
+
+    async getGlobalNews() {
+        const res = await fetch(`${BACKEND_URL}/investment/global_news`);
+        if (!res.ok) throw new Error('無法取得全球新聞');
+        return res.json();
+    },
+
+    async analyzeStock(symbol) {
+        const res = await fetch(`${BACKEND_URL}/investment/analyze/${symbol}`);
+        if (!res.ok) throw new Error('AI 分析請求失敗');
+        return res.json();
     }
 };

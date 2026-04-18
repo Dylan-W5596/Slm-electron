@@ -98,12 +98,12 @@ function Settings({ config, onUpdateConfig, onBack, onPlayClick, onOpenMonitor, 
                             <input
                                 type="radio"
                                 name='modelChange'
-                                checked={selectedModel === 'Gemma3_4b_it_Q4_K_M'}
-                                onChange={() => onModelChange("Gemma3_4b_it_Q4_K_M")}
+                                checked={selectedModel === 'Gemma4_e2b'}
+                                onChange={() => onModelChange("Gemma4_e2b")}
                                 disabled={isModelLoading}
                             />
-                            <span>Gemma3_4B_Q4_K_M</span>
-                            {isModelLoading && selectedModel === "Gemma3_4b_it_Q4_K_M" && (
+                            <span>Gemma4_e2b</span>
+                            {isModelLoading && selectedModel === "Gemma4_e2b" && (
                                 <div className="NotificationDiv">
                                     <span className='Notification'>Model is loading...</span>
                                     <img src={ICONS.progress} alt="loading" className="model-loader" />
@@ -115,12 +115,12 @@ function Settings({ config, onUpdateConfig, onBack, onPlayClick, onOpenMonitor, 
                             <input
                                 type="radio"
                                 name='modelChange'
-                                checked={selectedModel === 'Llama_3.2_3B_It_Q4_K_M'}
-                                onChange={() => onModelChange("Llama_3.2_3B_It_Q4_K_M")}
+                                checked={selectedModel === 'Llama_3.2'}
+                                onChange={() => onModelChange("Llama_3.2")}
                                 disabled={isModelLoading}
                             />
-                            <span>Llama_3.2_3B_It_Q4_K_M</span>
-                            {isModelLoading && selectedModel === "Llama_3.2_3B_It_Q4_K_M" && (
+                            <span>Llama_3.2</span>
+                            {isModelLoading && selectedModel === "Llama_3.2" && (
                                 <div className="NotificationDiv">
                                     <span className='Notification'>Model is loading...</span>
                                     <img src={ICONS.progress} alt="loading" className="model-loader" />

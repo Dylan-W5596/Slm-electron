@@ -1,57 +1,97 @@
 .omni-window {
     height: 100vh;
-    background: #1e1e1e;
+    background: rgba(30, 30, 30, 0.95);
     border-left: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: visible;
+    /* 必須為 visible 以便顯示左側負座標的手柄 */
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), flex-basis 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
     color: #e6e6e6;
+    backdrop-filter: blur(20px);
 }
 
 .omni-window.resizing {
     transition: none !important;
+    user-select: none;
 }
 
 .omni-resize-handle {
     position: absolute;
-    left: -3px;
+    left: -8px;
     top: 0;
-    width: 6px;
+    width: 16px;
     height: 100%;
     cursor: col-resize;
-    z-index: 1000;
+    z-index: 1001;
     background: transparent;
-    transition: background 0.2s;
+    transition: background 0.2s, border-left 0.2s;
 }
 
 .omni-resize-handle:hover,
-.omni-resize-handle:active {
-    background: var(--accent-blue, #007bff);
+.omni-window.resizing .omni-resize-handle {
+    background: rgba(59, 130, 246, 0.1);
+    border-left: 4px solid #3b82f6;
 }
 
-/* Tabs Header */
-.omni-tabs-container {
+.omni-resize-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    background: transparent;
+    cursor: col-resize;
+}
+
+/* Header & Tabs */
+.omni-window-header {
     display: flex;
-    background: #252526;
-    height: 40px;
+    background: rgba(0, 0, 0, 0.4);
+    height: 48px;
     align-items: center;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-    padding: 0 5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0 10px;
     flex-shrink: 0;
+    backdrop-filter: blur(15px);
+    overflow: visible !important;
+    /* 重要：確保下拉選單不被裁切 */
+    z-index: 100;
 }
 
 .omni-tabs {
     display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
     flex: 1;
+    min-width: 0;
+    overflow-y: hidden;
     overflow-x: auto;
     height: 100%;
-    scrollbar-width: thin;
+    gap: 4px;
+    padding-bottom: 2px;
 }
 
+/* 恢復並優化捲軸樣式：精簡、優雅、不干擾 */
 .omni-tabs::-webkit-scrollbar {
-    height: 2px;
+    height: 5px;
+}
+
+.omni-tabs::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.omni-tabs::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.omni-tabs::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .omni-tab {
@@ -69,35 +109,39 @@
 }
 
 .omni-tab:hover {
-    background: #2d2d2d;
-    color: #cccccc white;
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
 }
 
 .omni-tab.active {
-    background: #1e1e1e;
-    color: white;
-    box-shadow: inset 0 2px 0 var(--accent-blue, #007bff);
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border-bottom: 2px solid #3b82f6;
 }
 
 .tab-title {
-    max-width: 150px;
+    max-width: 120px;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-weight: 500;
 }
 
 .tab-close {
-    margin-left: 10px;
-    opacity: 0.3;
+    margin-left: 8px;
+    opacity: 0.4;
     background: transparent;
     border: none;
     color: white;
     cursor: pointer;
-    font-size: 1.1rem;
-    line-height: 1;
+    font-size: 1rem;
+    padding: 2px 5px;
+    border-radius: 4px;
+    transition: all 0.2s;
 }
 
 .tab-close:hover {
     opacity: 1;
+    background: rgba(255, 77, 77, 0.2);
     color: #ff4d4d;
 }
 
@@ -105,8 +149,11 @@
 .omni-tab-actions {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
     padding: 0 10px;
+    flex-shrink: 0;
+    /* 加固按鈕區，防止被標籤擠壓 */
+    margin-left: auto;
 }
 
 .omni-action-btn {
@@ -135,38 +182,64 @@
 
 .add-tab-btn,
 .omni-close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     background: transparent;
     border: none;
     color: #888;
     cursor: pointer;
     font-size: 1.2rem;
-    transition: color 0.2s;
+    transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.add-tab-btn:hover,
+.add-tab-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #3b82f6;
+}
+
 .omni-close-btn:hover {
-    color: white;
+    background: rgba(255, 77, 77, 0.1);
+    color: #ff4d4d;
 }
 
 /* Dropdown */
 .omni-dropdown-container {
     position: relative;
+    z-index: 2000;
+    /* 給予獨立層級，確保選單不被遮擋 */
 }
 
 .omni-dropdown-menu {
     position: absolute;
-    top: 35px;
+    top: 40px;
+    /* 稍微拉開距離 */
     right: 0;
     background: #2d2d2d;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-    z-index: 2000;
-    min-width: 160px;
+    border-radius: 8px;
+    /* 更加圓潤 */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    z-index: 2100;
+    min-width: 180px;
     overflow: hidden;
+    animation: fadeInMenu 0.2s ease-out;
+    /* 加入輕微動畫 */
+}
+
+@keyframes fadeInMenu {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .dropdown-item {
@@ -192,11 +265,15 @@
 }
 
 /* Content Area */
-.omni-content {
+.omni-window-content {
     flex: 1;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    /* 從 hidden 改為 auto，解決裁切問題 */
     background: #1e1e1e;
     position: relative;
+    min-width: 0;
 }
 
 .omni-content-panel {
@@ -208,6 +285,9 @@
 .omni-content-panel.active {
     display: flex;
     flex-direction: column;
+    height: 100%;
+    flex: 1;
+    min-width: 0;
 }
 
 /* Tab Viewers */
@@ -322,13 +402,43 @@
     outline: none;
 }
 
+/* 防止 Resizing 時事件丟失的遮罩層 */
+.omni-resize-overlay {
+    position: fixed;
+    /* 改為隨視窗固定，範圍更廣 */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9998;
+    /* 僅次於 handle */
+    background: transparent;
+    cursor: col-resize;
+}
+
 /* Empty State */
 .omni-empty {
-    height: 100%;
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #444;
+    color: rgba(255, 255, 255, 0.15);
+    /* 更優雅的淡灰色 */
     user-select: none;
+    text-align: center;
+    padding: 40px;
+    height: 100%;
+}
+
+.omni-empty img {
+    width: 100px;
+    height: 100px;
+}
+
+.omni-empty p {
+    font-size: 1.1rem;
+    margin-top: 15px;
+    font-weight: 300;
+    letter-spacing: 0.05em;
 }

@@ -51,18 +51,31 @@ function UpdateLog({ onBack, t }) {
                 const cat = categoryMatch[1].charAt(0).toUpperCase() + categoryMatch[1].slice(1).toLowerCase();
                 if (!currentVersion.categories[cat]) currentVersion.categories[cat] = [];
                 currentVersion.lastCategory = cat;
-            } else if (currentVersion && currentVersion.lastCategory) {
-                if (itemMatchWithTitle) {
-                    if (!currentVersion.categories[currentVersion.lastCategory]) currentVersion.categories[currentVersion.lastCategory] = [];
+            } else if (itemMatchSimple && currentVersion && currentVersion.lastCategory) {
+                const content = itemMatchSimple[1].trim();
+
+                // 確保容器存在
+                if (!currentVersion.categories[currentVersion.lastCategory]) {
+                    currentVersion.categories[currentVersion.lastCategory] = [];
+                }
+
+                // 強效解析：只要這行裡面有 **，就把它拆開
+                if (content.includes('**')) {
+                    const parts = content.split('**');
+                    // parts[1] 是被雙星號包裹的內容
+                    const title = parts[1] ? parts[1].trim() : '';
+                    let desc = parts.slice(2).join('').trim();
+                    // 移除後方剩餘的冒號或空格
+                    desc = desc.replace(/^[:：\s]+/, '');
+
                     currentVersion.categories[currentVersion.lastCategory].push({
-                        title: itemMatchWithTitle[1],
-                        description: itemMatchWithTitle[2]
+                        title: title,
+                        description: desc || ''
                     });
-                } else if (itemMatchSimple) {
-                    if (!currentVersion.categories[currentVersion.lastCategory]) currentVersion.categories[currentVersion.lastCategory] = [];
+                } else {
                     currentVersion.categories[currentVersion.lastCategory].push({
                         title: '',
-                        description: itemMatchSimple[1]
+                        description: content
                     });
                 }
             }
@@ -113,9 +126,10 @@ function UpdateLog({ onBack, t }) {
                                             <ul className="item-list">
                                                 {items.map((item, idx) => (
                                                     <li key={idx}>
-                                                        {item.title && <strong className="item-title">{item.title}</strong>}
-                                                        {item.title && <span className="item-sep"> : </span>}
-                                                        <span className="item-desc">{item.description}</span>
+                                                        <div className="item-content">
+                                                            {item.title && <span className="item-title">{item.title}</span>}
+                                                            <span className="item-desc">{item.description}</span>
+                                                        </div>
                                                     </li>
                                                 ))}
                                             </ul>

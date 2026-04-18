@@ -1,8 +1,9 @@
+import React, { memo } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { ICONS } from '../assets/assets'
 
-function ChatMessage({ msg, onCopy, onReply, t }) {
+function ChatMessage({ msg, onCopy, onReply, onChart, t }) {
     return (
         <div className={`message ${msg.role}`}>
             <div className="avatar">
@@ -18,11 +19,14 @@ function ChatMessage({ msg, onCopy, onReply, t }) {
                 </div>
                 {msg.role === 'assistant' && (
                     <div className="message-actions">
-                        <button className="action-btn" onClick={() => onReply(msg.content)} title="回覆">
-                            <img src={ICONS.reply} alt="Reply" />
+                        <button className="action-btn" onClick={() => onReply(msg.content)} title={t.reply}>
+                            <img src={ICONS.reply} alt={t.reply} />
                         </button>
-                        <button className="action-btn" onClick={() => onCopy(msg.content)} title="複製">
-                            <img src={ICONS.copyAll} alt="Copy" />
+                        <button className="action-btn" onClick={() => onCopy(msg.content)} title={t.copy}>
+                            <img src={ICONS.copyAll} alt={t.copy} />
+                        </button>
+                        <button className="action-btn" onClick={() => onChart(msg.content)} title={t.chartOutput}>
+                            <img src={ICONS.chartPie} alt={t.chartOutput} />
                         </button>
                     </div>
                 )}
@@ -31,4 +35,4 @@ function ChatMessage({ msg, onCopy, onReply, t }) {
     );
 }
 
-export default ChatMessage;
+export default memo(ChatMessage);

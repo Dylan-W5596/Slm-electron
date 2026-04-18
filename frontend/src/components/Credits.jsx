@@ -323,7 +323,7 @@ function Credits({ onBack, t }) {
 
                 <div className="credits-footer">
                     <p>Powered by X_OO</p>
-                    <p className="version-text">X-SLM ALPHA VERSION 1.0.0</p>
+                    <p className="version-text">Version {t.version}</p>
                 </div>
             </div>
         </div>

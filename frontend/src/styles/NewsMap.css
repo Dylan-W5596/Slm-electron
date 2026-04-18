@@ -1,0 +1,332 @@
+.newsmap-view {
+    flex: 1;
+    background: #0d1117;
+    /* GitHub Dark style background */
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    animation: fadeInApp 0.5s ease;
+    overflow: hidden;
+}
+
+.newsmap-header {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.newsmap-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0;
+    background: linear-gradient(135deg, #fff 0%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.newsmap-subtitle {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.map-container-full {
+    flex: 1;
+    background: rgba(22, 27, 34, 0.5);
+    /* Deep dark blue-gray */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+    cursor: grab;
+}
+
+.map-container-full:active {
+    cursor: grabbing;
+}
+
+/* Marker / Hotspot animations */
+.pulse-circle {
+    opacity: 0.8;
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    transform-origin: center;
+    transform-box: fill-box; /* 關鍵：確保在 SVG 內以自身為中心縮放 */
+}
+
+@keyframes ping {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.8;
+    }
+
+    70%,
+    100% {
+        transform: scale(3.5);
+        opacity: 0;
+    }
+}
+
+g[tabindex="0"] {
+    outline: none !important;
+}
+
+g[tabindex="0"]:hover circle,
+g[tabindex="0"]:hover text {
+    fill: #38bdf8 !important;
+    /* Light blue on hover */
+    filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.8));
+    cursor: pointer;
+}
+
+
+/* Glassmorphism News Modal */
+.news-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.news-modal-content {
+    background: rgba(30, 41, 59, 0.85);
+    /* Slate 800 with opacity */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 85vh; /* 增加一點高度 */
+    height: 700px;    /* 設定穩定高度以強化滾動感 */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+}
+
+.news-modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--text-secondary);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.news-modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.news-modal-title {
+    margin: 0;
+    padding: 1.5rem 1.5rem 1rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.news-modal-list {
+    padding: 0.5rem 1.5rem 1.5rem;
+    overflow-y: overlay; /* 使用 overlay 讓滾動條不佔空間 */
+    flex: 1;             /* 確保列表填滿空間 */
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.news-modal-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.news-modal-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.news-modal-item {
+    padding: 1.2rem;
+    background: rgba(30, 41, 59, 0.4); /* 稍微調亮一點背景 */
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.news-modal-item:hover {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(56, 189, 248, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+}
+
+.news-modal-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.news-modal-time {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.news-modal-publisher {
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.news-modal-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.1rem; /* 稍微放大標題 */
+    font-weight: 700;
+    line-height: 1.5;
+    display: block;
+    margin: 0;
+}
+
+.news-modal-summary {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* 增加到 3 行 */
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 0.2rem;
+}
+
+/* Detail View Styles */
+.news-detail-view {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.news-detail-back {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0;
+    margin-bottom: 0.5rem;
+    transition: opacity 0.2s;
+}
+
+.news-detail-back:hover {
+    opacity: 0.8;
+}
+
+.news-detail-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.news-detail-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.3;
+    color: white;
+    margin: 0;
+}
+
+.news-detail-content {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+}
+
+.news-detail-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.news-detail-action {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.news-detail-action:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.news-modal-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 0;
+    color: var(--text-secondary);
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}

@@ -3,6 +3,10 @@ const path = require('path');
 const { spawn } = require('child_process');
 const http = require('http');
 
+// [優化] 停用會導致 DevTools 噴發 Autofill 報錯的 Chrome 特性，保持控制台乾淨
+app.commandLine.appendSwitch('disable-features', 'AutofillServerCommunication');
+app.commandLine.appendSwitch('disable-autofill-keyboard-accessory-view');
+
 let mainWindow;
 let monitorWindow;
 let backendProcess; //全域變數, 防止重複執行
@@ -14,6 +18,8 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 1500,
         height: 1000,
+        minHeight: 800,
+        minWidth: 600,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false, // 若需要簡單的 IPC 或是使用 preload
@@ -80,6 +86,18 @@ function startBackend() {
 
     console.log(`正在啟動後端，使用: ${pythonPath} ${scriptPath}`);
 
+    // 啟動前先嘗試清理可能殘留的埠位佔用
+    if (isDev && process.platform === 'win32') {
+        try {
+            // 尋找並結束所有佔用 8000 埠的進程
+            const { execSync } = require('child_process');
+            execSync(`for /f "tokens=5" %a in ('netstat -aon ^| findstr :${BACKEND_PORT} ^| findstr LISTENING') do taskkill /f /pid %a`, { stdio: 'ignore' });
+            console.log('已清理殘留的埠位佔用');
+        } catch (e) {
+            // 忽略找不到佔用者的報錯
+        }
+    }
+
     backendProcess = spawn(pythonPath, [scriptPath], {
         cwd: path.dirname(scriptPath),
         stdio: 'pipe' // 改為 pipe 以便捕獲日誌
@@ -107,7 +125,25 @@ function startBackend() {
 
     backendProcess.on('exit', (code, signal) => {
         console.log(`後端已退出，代碼 ${code}，訊號 ${signal}`);
+        backendProcess = null;
     });
+}
+
+function killBackend() {
+    if (backendProcess && backendProcess.pid) {
+        console.log(`正在強制結束後端進程 (PID: ${backendProcess.pid})...`);
+        try {
+            if (process.platform === 'win32') {
+                // Windows 下需使用 taskkill /T /F 來確保整個進程樹都被殺掉
+                spawn('taskkill', ['/pid', backendProcess.pid, '/f', '/t']);
+            } else {
+                backendProcess.kill('SIGKILL');
+            }
+        } catch (e) {
+            console.error('結束後端失敗:', e);
+        }
+        backendProcess = null;
+    }
 }
 
 function checkBackendReady(callback) {
@@ -164,9 +200,7 @@ app.on('ready', () => {
 });
 
 app.on('window-all-closed', () => {
-    if (backendProcess) {
-        backendProcess.kill();
-    }
+    killBackend();
     if (process.platform !== 'darwin') {
         app.quit();
     }
@@ -179,7 +213,5 @@ app.on('activate', () => {
 });
 
 app.on('before-quit', () => {
-    if (backendProcess) {
-        backendProcess.kill();
-    }
+    killBackend();
 });

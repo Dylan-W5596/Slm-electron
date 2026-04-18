@@ -8,6 +8,8 @@ import Settings from './components/Settings';
 import Home from './components/Home';
 import Credits from './components/Credits';
 import UpdateLog from './components/UpdateLog';
+import Investment from './components/Investment';
+import NewsMap from './components/NewsMap';
 import { playSound } from './utils/soundUtils';
 import { languages } from './translations/languages';
 import { ICONS } from './assets/assets'
@@ -98,6 +100,12 @@ function App() {
       console.error("建立會話失敗", e);
     }
   }, [config.soundEnabled, fetchData, t.error]);
+
+  // 導航回調
+  const onOpenSettings = useCallback(() => handleNavigate('settings'), [handleNavigate]);
+  const onOpenInvestment = useCallback(() => handleNavigate('investment'), [handleNavigate]);
+  const onOpenNewsMap = useCallback(() => handleNavigate('newsmap'), [handleNavigate]);
+  const onGoHome = useCallback(() => handleNavigate('home'), [handleNavigate]);
 
   //載入聊天室
   const handleLoadSession = useCallback(async (id) => {
@@ -253,8 +261,8 @@ function App() {
     }
   };
 
-  //停止AI生成訊息
-  const handleStopGeneration = () => {
+  // 停止AI生成訊息
+  const handleStopGeneration = useCallback(() => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       const userMessages = messages.filter(m => m.role === 'user');
@@ -262,19 +270,80 @@ function App() {
         setInput(userMessages[userMessages.length - 1].content);
       }
     }
-  };
+  }, [messages]);
 
-  //複製AI生成訊息
-  const handleCopyMessage = (content) => {
+  // 切換側邊欄
+  const handleToggleSidebar = useCallback(() => {
+    setSidebarOpen(prev => !prev);
+  }, []);
+
+  // 播放聲音回調
+  const handlePlaySound = useCallback((force = false) => {
+    playSound('click', force || config.soundEnabled);
+  }, [config.soundEnabled]);
+
+  // 取消回覆
+  const handleCancelReply = useCallback(() => {
+    setReplyingTo(null);
+  }, []);
+
+  // 切換 OmniWindow 可見性
+  const handleToggleOmni = useCallback(() => {
+    setOmniVisible(prev => !prev);
+  }, []);
+
+  // 關閉 OmniWindow
+  const handleCloseOmni = useCallback(() => {
+    setOmniVisible(false);
+  }, []);
+
+  // 複製AI生成訊息
+  const handleCopyMessage = useCallback((content) => {
     navigator.clipboard.writeText(content).then(() => {
       playSound('success', config.soundEnabled);
+      addNotification(t.success, "success")
     });
-  };
+  }, [config.soundEnabled, t.success, addNotification]);
 
-  //回覆AI生成訊息
-  const handleReplyMessage = (content) => {
+  // 回覆AI生成訊息
+  const handleReplyMessage = useCallback((content) => {
     setReplyingTo(content);
-  };
+  }, []);
+
+  const handleChartAnalysis = useCallback((content) => {
+    // 1. 各種類型的偵測 Regex
+    const jsonMatch = content.match(/```(?:json|json:chart)\n([\s\S]*?)```/);
+    const htmlMatch = content.match(/```html\n([\s\S]*?)```/);
+    const codeMatch = content.match(/```(\w+)\n([\s\S]*?)```/);
+    let type = '';
+    let targetContent = '';
+
+    if (jsonMatch) {
+      type = 'json';
+      targetContent = jsonMatch[1].trim();
+    } else if (htmlMatch) {
+      type = 'html';
+      targetContent = htmlMatch[1].trim();
+    } else if (codeMatch) {
+      type = codeMatch[1]; // 例如 python, javascript
+      targetContent = codeMatch[2].trim();
+    }
+
+    // 2. 判斷是否找到有效內容
+    if (type && targetContent) {
+      setOmniContent(targetContent);
+      setOmniType(type);
+      setOmniVisible(true);
+      setView('chat');
+
+      // 提示訊息根據類型動態顯示
+      const notice = type === 'json' ? `已${t.success}` : `已顯示 ${type.toUpperCase()} 資源`;
+      addNotification(notice, "success");
+    } else {
+      addNotification(t.noSupportedContent || "此訊息不支援任何視覺功能", "error");
+      playSound('error', config.soundEnabled);
+    }
+  }, [config.soundEnabled, t])
 
   //開啟後台監管
   const handleOpenMonitor = () => {
@@ -411,7 +480,7 @@ function App() {
     <div className={`app-container ${isEnteringChat ? 'entering-transition' : ''}`}>
       <NotificationContainer />
 
-      {/* 當畫面為主頁面時 */}
+      {/* 設定畫面切換 */}
       {view === 'home' ? (
         <Home onNavigate={handleNavigate} t={t} />
       ) : view === 'credits' ? (
@@ -425,21 +494,23 @@ function App() {
             sessions={sessions}
             sessionId={sessionId}
             sidebarOpen={sidebarOpen}
-            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+            onToggleSidebar={handleToggleSidebar}
             onNewChat={handleNewChat}
-            onLoadSession={(id) => { handleNavigate('chat'); handleLoadSession(id); }}
+            onLoadSession={handleLoadSession}
             onDeleteSession={handleDeleteSession}
             onRenameSession={handleRenameSession}
             onNewGroup={handleNewGroup}
             onRenameGroup={handleRenameGroup}
             onDeleteGroup={handleDeleteGroup}
             onMoveSession={handleMoveSession}
-            onOpenSettings={() => { handleNavigate('settings'); }}
-            onGoHome={() => { handleNavigate('home'); }}
+            onOpenSettings={onOpenSettings}
+            onOpenInvestment={onOpenInvestment}
+            onOpenNewsMap={onOpenNewsMap}
+            onGoHome={onGoHome}
             activeView={view}
-            onPlayClick={(force = false) => playSound('click', force || config.soundEnabled)}
+            onPlayClick={handlePlaySound}
             handleNavigate={handleNavigate}
-            onToggleOmni={() => setOmniVisible(!omniVisible)}
+            onToggleOmni={handleToggleOmni}
             t={t}
           />
 
@@ -462,6 +533,7 @@ function App() {
                         msg={msg}
                         onCopy={handleCopyMessage}
                         onReply={handleReplyMessage}
+                        onChart={handleChartAnalysis}
                         t={t}
                       />
                     ))}
@@ -481,7 +553,7 @@ function App() {
                     input={input}
                     setInput={setInput}
                     replyingTo={replyingTo}
-                    onCancelReply={() => setReplyingTo(null)}
+                    onCancelReply={handleCancelReply}
                     onSendMessage={handleSendMessage}
                     onStopGeneration={handleStopGeneration}
                     isLoading={isLoading}
@@ -495,14 +567,21 @@ function App() {
                 <Settings
                   config={config}
                   onUpdateConfig={setConfig}
-                  onBack={() => { handleNavigate('chat'); }}
-                  onPlayClick={(force = false) => playSound('click', force || config.soundEnabled)}
-                  onOpenMonitor={() => { playSound('click', config.soundEnabled); handleOpenMonitor(); }}
+                  onBack={() => handleNavigate('chat')}
+                  onPlayClick={handlePlaySound}
+                  onOpenMonitor={handleOpenMonitor}
                   selectedModel={selectedModel}
                   isModelLoading={isModelLoading}
                   onModelChange={handleModelChange}
                   t={t}
                 />
+              )}
+
+              {view === 'investment' && (
+                <Investment onNavigate={handleNavigate} t={t} />
+              )}
+              {view === 'newsmap' && (
+                <NewsMap onNavigate={handleNavigate} t={t} />
               )}
             </div>
 
@@ -510,7 +589,7 @@ function App() {
               content={omniContent}
               type={omniType}
               visible={omniVisible && view === 'chat'}
-              onClose={() => setOmniVisible(false)}
+              onClose={handleCloseOmni}
               t={t}
             />
           </div>
