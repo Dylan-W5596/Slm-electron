@@ -5,21 +5,21 @@
 
 ## 技術棧 (Tech Stack)
 ### **核心架構**
-- **Runtime:** Electron (桌面應用外殼)
-- **Frontend:** React 19 + Vite (高速渲染與開發物料)
-- **Backend:** Python 3 + FastAPI (高效能異步 API 伺服器)
-- **Database:** SQLite + SQLAlchemy (輕量級本地數據持久化)
+- **Runtime:** Electron
+- **Frontend:** React 19 + Vite
+- **Backend:** Python 3 + FastAPI
+- **Database:** SQLite + SQLAlchemy
 ### **人工智慧**
-- **Engine:** Ollama (本地大型語言模型運算)
-- **Models:** Gemma 3 / Llama 3.2 (隱私優先、離線分析)
-- **Logic:** Prompt Engineering + Regex Validation (結構化數據輸出確保)
+- **Engine:** Ollama 
+- **Models:** Gemma 3 / Llama 3.2 
+- **Logic:** Prompt Engineering + Regex Validation
 ### **數據視覺化**
-- **Charting:** Recharts (動態金融圖表)
-- **Mapping:** D3-geo / React Simple Maps (全球新聞地圖)
-- **3D Effects:** Three.js / React Three Fiber (現代感視覺特效)
+- **Charting:** Recharts
+- **Mapping:** D3-geo / React Simple Maps
+- **3D Effects:** Three.js / React Three Fiber
 ### **開發與測試**
-- **Testing:** Vitest + React Testing Library (自動化邏輯校驗)
-- **Bundler:** Vite (前端打包) / Electron-builder (安裝檔打包)
+- **Testing:** Vitest + React Testing Library
+- **Bundler:** Vite (前端打包) / Electron-builder
 
 ## 文件結構
 ```
@@ -49,7 +49,7 @@ llm_electron-Test/
 ├── 📂 reviewer/
 │   ├── 📂 _error_log/
 │   ├── 📂 design/
-│   └── 📄 system_architecture.svg # 系統架構圖 (剛生成的圖檔)
+│   └── 📄 system_architecture.svg # 系統架構圖
 │
 ├── 📂 install/                # 安裝與建置指令腳本
 ├── 📄 README.MD               # 專案說明文件
